@@ -1,0 +1,2 @@
+# GitManageFileVersion
+GitManageFileVersion
