@@ -12,5 +12,53 @@
     <vm:MainViewModel />
   </Design.DataContext>
 
-  <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+	<TabControl Margin="5">
+		<TabItem Header="Git初始化">
+			<Grid RowDefinitions="100,200">
+				<Grid Grid.Row="0" MinHeight="100">
+					<Label Content="{Binding GitPath}"></Label>
+				</Grid>
+				<Grid Grid.Row="1" ColumnDefinitions="400,400" MinHeight="200">
+					<Grid RowDefinitions="100,Auto" ColumnDefinitions="Auto,Auto">
+					
+						<Button Grid.Row="0" Grid.Column="0" Command="{Binding OpenFolderCommand}">选择文件夹</Button>
+						<Button Grid.Row="0" Grid.Column="1"  Command="{Binding GitInitCommand}" >初始化</Button>
+						
+					</Grid>
+
+				</Grid>
+
+			
+			</Grid>
+
+		</TabItem>
+
+		<TabItem Header="Git备份">
+			<Grid RowDefinitions="100,200">
+				<Grid Grid.Row="0" MinHeight="100">
+					<Label Content="{Binding GitPath}"></Label>
+				</Grid>
+				<Grid Grid.Row="1" ColumnDefinitions="400,400" MinHeight="200">
+					<Grid RowDefinitions="100,Auto" ColumnDefinitions="Auto,Auto,Auto">
+						<Button Grid.Row="0" Grid.Column="0" Command="{Binding OpenFileCommand}">选择文件</Button>
+						<Button Grid.Row="0" Grid.Column="1" Command="{Binding OpenFolderCommand}">选择文件夹</Button>
+						<Button Grid.Row="0" Grid.Column="2"  Command="{Binding GitInitCommand}" >初始化</Button>
+						
+					</Grid>
+
+				</Grid>
+
+
+			</Grid>
+
+		</TabItem>
+		
+		<TabItem Header="关于">
+			<Grid RowDefinitions="100" ColumnDefinitions="Auto,Auto">
+
+				<TextBlock Grid.Column="0" Text="{Binding About}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				<Button Grid.Column="1">阿牛</Button>
+			</Grid>
+		</TabItem>
+	</TabControl>
 </UserControl>

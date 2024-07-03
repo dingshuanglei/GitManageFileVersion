@@ -7,6 +7,6 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="GitManageFileVersionAvaloniaApp.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="GitManageFileVersionAvaloniaApp">
+        Title="GitManageFileVersion">
         <views:MainView />
 </Window>
