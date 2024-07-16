@@ -3,7 +3,9 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using GitManageFileVersionAvaloniaApp.Utils;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -14,6 +16,11 @@ namespace GitManageFileVersionAvaloniaApp.ViewModels;
 public partial class MainViewModel : ViewModelBase
 {
     #region ObservableProperty
+    /// <summary>
+    /// SelectedIndex
+    /// </summary>
+    [ObservableProperty]
+    private int selectedIndex;
     /// <summary>
     /// 关于
     /// </summary>
@@ -29,6 +36,10 @@ public partial class MainViewModel : ViewModelBase
     #endregion
 
     #region Command
+    /// <summary>
+    /// init
+    /// </summary>
+    public IAsyncRelayCommand TestCommand { get; }
     /// <summary>
     /// init
     /// </summary>
@@ -51,12 +62,26 @@ public partial class MainViewModel : ViewModelBase
 
     public MainViewModel()
     {
+        SelectedIndex = 1;
         About = "我是一款开源免费的Git管理文件版本";
         GitPath = AppDomain.CurrentDomain.BaseDirectory;
         GitInitCommand = new AsyncRelayCommand(GitInit);
         OpenFileCommand = new AsyncRelayCommand(OpenFile);
         OpenFolderCommand = new AsyncRelayCommand(OpenFolder);
+        TestCommand = new AsyncRelayCommand(Test);
+    }
 
+    private async Task Test()
+    {
+        await Task.Delay(1000);
+        if (SelectedIndex > 2)
+        {
+            SelectedIndex = 0;
+        }
+        else
+        {
+            SelectedIndex++;
+        }
     }
 
     private async Task GitInit()
@@ -65,10 +90,11 @@ public partial class MainViewModel : ViewModelBase
         {
             if (string.IsNullOrWhiteSpace(GitPath))
             {
-                return;
+                return ;
             }
-            var info = ExcuteGitCommand("init", GitPath);
-            if (!string.IsNullOrWhiteSpace(info.Error))
+            var infos = ExcuteGitCommand("init", GitPath);
+            string errInfos = string.Empty;
+            if (!string.IsNullOrWhiteSpace(errInfos))
             {
 
             }
@@ -82,8 +108,9 @@ public partial class MainViewModel : ViewModelBase
     /// <param name="commnad">command</param>
     /// <param name="gitPath">git path</param>
     /// <returns></returns>
-    private static GitInfo ExcuteGitCommand(string commnad, string gitPath)
+    private static List<GitInfo> ExcuteGitCommand(string commnad, string gitPath)
     {
+        List<GitInfo> result = [];
         // 启动进程
         using Process process = new();
         var paths = gitPath.Split(Environment.NewLine);
@@ -103,12 +130,10 @@ public partial class MainViewModel : ViewModelBase
             // 输出命令执行结果
             string stdout = process.StandardOutput.ReadToEnd();
             string stderr = process.StandardError.ReadToEnd();
+            result.Add(new GitInfo(path,stdout,stderr));
         }
-       
-
         process.WaitForExit();
-
-        return new GitInfo("", "");
+        return result;
     }
 
     /// <summary>
@@ -163,6 +188,7 @@ public partial class MainViewModel : ViewModelBase
     /// <returns></returns>
     private async Task OpenFolder(CancellationToken token)
     {
+        //await MessageBox.ShowAsync("123","test",MessageBoxIcon.Info,MessageBoxButton.OkCancel);
         await DoOpenFolderPickerAsync();
 
 
@@ -193,7 +219,7 @@ public partial class MainViewModel : ViewModelBase
     /// <summary>
     /// 获取环境git.ext的环境变量路径
     /// </summary>
-    private static string strEnvironmentVariable
+    private static string StrEnvironmentVariable
     {
         get
         {
@@ -217,16 +243,7 @@ public partial class MainViewModel : ViewModelBase
         }
     }
 
-    /// <summary>
-    /// 
-    /// git工作路径
-    /// </summary>
-    private static string m_strWorkingDir;
-    public static string strWorkingDir
-    {
-        get { return m_strWorkingDir; }
-        set { m_strWorkingDir = value; }
-    }
+    public static string StrWorkingDir { get; set; }
 
 
     /// <summary>
@@ -234,14 +251,14 @@ public partial class MainViewModel : ViewModelBase
     /// </summary>
     public static void ExcuteGitCommand(string strCommnad, string gitPath, DataReceivedEventHandler call)
     {
-        string strGitPath = System.IO.Path.Combine(strEnvironmentVariable, "git.exe");
+        string strGitPath = System.IO.Path.Combine(StrEnvironmentVariable, "git.exe");
         if (string.IsNullOrEmpty(strGitPath))
         {
             Debug.WriteLine(">>>>>strEnvironmentVariable: enviromentVariable is not config!!!!");
             return;
         }
 
-        Process p = new Process();
+        Process p = new();
         p.StartInfo.FileName = strGitPath;
         //p.StartInfo.FileName = "git";
         p.StartInfo.Arguments = strCommnad;

@@ -1,15 +1,11 @@
-﻿using System.Threading.Tasks;
-
-using Avalonia;
-using Avalonia.Controls.ApplicationLifetimes;
+﻿using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
-
 using GitManageFileVersionAvaloniaApp.ViewModels;
 using GitManageFileVersionAvaloniaApp.Views;
-
 using Meadow;
 using Meadow.Pinouts;
+using System.Threading.Tasks;
 
 namespace GitManageFileVersionAvaloniaApp;
 

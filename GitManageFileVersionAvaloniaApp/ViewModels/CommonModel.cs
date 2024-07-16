@@ -4,6 +4,6 @@
     {
     }
 
-    public record GitInfo(string Output, string Error);
+    public record GitInfo(string GitPath,string Output, string Error);
 
 }
